@@ -1,4 +1,4 @@
-package kr.co._29cm.homework.common.exception.handler;//package kr.co._29cm.homework.common.exception.handler;
+//package kr.co._29cm.homework.common.exception.handler;
 //
 //
 //import kr.co._29cm.homework.common.exception.CustomException;
@@ -12,7 +12,7 @@ package kr.co._29cm.homework.common.exception.handler;//package kr.co._29cm.home
 //public class GlobalExceptionHandler {
 //
 //    @AfterThrowing(pointcut = "execution(* kr.co._29cm.homework.*.*(..))",throwing = "ex")
-//    public void handlerError(CustomException ex){
+//    public void handlerError(Exception ex){
 //        System.out.println("get into handler");
 //        System.out.println(ex.getMessage());
 //    }

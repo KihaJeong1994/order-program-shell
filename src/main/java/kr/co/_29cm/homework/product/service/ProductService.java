@@ -5,6 +5,7 @@ import kr.co._29cm.homework.product.entity.Product;
 import kr.co._29cm.homework.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +26,9 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
+    @Transactional
     public void decreaseStock(Long id, int quantity) throws SoldOutException {
-        Product product = getProductById(id).get();
+        Product product = productRepository.findById(id).get();
         if(quantity> product.getStock()){
             throw new SoldOutException();
         }else {

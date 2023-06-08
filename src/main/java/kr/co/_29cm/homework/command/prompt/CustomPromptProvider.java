@@ -13,7 +13,7 @@ public class CustomPromptProvider implements PromptProvider
     {
         return new AttributedString(
                 "입력(o[order]: 주문, q[quit]: 종료) :",
-                AttributedStyle.DEFAULT.background(AttributedStyle.GREEN));
+                AttributedStyle.DEFAULT.background(AttributedStyle.BLACK));
     }
 }
 
