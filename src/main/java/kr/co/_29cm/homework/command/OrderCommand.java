@@ -16,6 +16,7 @@ import org.springframework.shell.component.StringInput.StringInputContext;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class OrderCommand extends AbstractShellComponent {
     private final Integer DELIVERY_FEE = 2_500;
 
     @ShellMethod(key = {"o","order"}, value = "String input", group = "Components")
+    @Transactional
     public void order() throws SoldOutException {
         boolean isFinished = false;
         List<Order> orders = new ArrayList<>();
@@ -41,9 +43,7 @@ public class OrderCommand extends AbstractShellComponent {
                 Integer quantity = enterQuantity();
                 if(product==null && quantity==null){
                     isFinished = true;
-                    if(!orderService.makeOrders(orders)){
-                        throw new SoldOutException();
-                    };
+                    orderService.makeOrders(orders);
                     printOrders(orders);
                 }else{
                     Order order = new Order(product, quantity);

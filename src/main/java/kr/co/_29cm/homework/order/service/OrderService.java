@@ -23,18 +23,23 @@ public class OrderService {
     private final ProductService productService;
     private final TransactionTemplate transactionTemplate;
 
-    public Boolean makeOrders(List<Order> orders) {
+    @Transactional
+    public Boolean makeOrders(List<Order> orders) throws SoldOutException {
+//        for(Order order : orders) makeOrder(order);
+//        return true;
         return transactionTemplate.execute(status -> {
             try {
                 for(Order order : orders) makeOrder(order);
                 return true;
             } catch (SoldOutException e) {
-                status.setRollbackOnly();
-                return false;
+                throw e;
+//                status.setRollbackOnly();
+//                return false;
             }
         });
     }
 
+    @Transactional
     public void makeOrder(Order order) throws SoldOutException {
         productService.decreaseStock(order.getProduct().getId(), order.getQuantity());
         // Order 저장 등
