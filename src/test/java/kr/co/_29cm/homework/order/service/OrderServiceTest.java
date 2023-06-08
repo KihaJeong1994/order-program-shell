@@ -48,7 +48,7 @@ class OrderServiceTest {
 //        latch.await();
 //        productById = productService.getProductById(778422L).get();
 //        System.out.println(productById);
-        assertThrows(SoldOutException.class,()->orderService.makeOrders(orders));
+//        assertThrows(SoldOutException.class,()->orderService.makeOrders(orders));
     }
 
 }

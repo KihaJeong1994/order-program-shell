@@ -23,7 +23,6 @@ public class OrderService {
     private final ProductService productService;
     private final TransactionTemplate transactionTemplate;
 
-    @Transactional
     public Boolean makeOrders(List<Order> orders) {
         return transactionTemplate.execute(status -> {
             try {
@@ -36,7 +35,6 @@ public class OrderService {
         });
     }
 
-    @Transactional
     public void makeOrder(Order order) throws SoldOutException {
         productService.decreaseStock(order.getProduct().getId(), order.getQuantity());
         // Order 저장 등
