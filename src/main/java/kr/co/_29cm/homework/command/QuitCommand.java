@@ -25,6 +25,7 @@ public class QuitCommand{
 
     @ShellMethod(key = {"q","quit"})
     public void quit() {
+        System.out.println("고객님의 주문 감사합니다.");
         throw new ExitRequest();
     }
 
