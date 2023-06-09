@@ -3,21 +3,20 @@ package kr.co._29cm.homework.order.service;
 import kr.co._29cm.homework.common.exception.SoldOutException;
 import kr.co._29cm.homework.order.entity.Order;
 import kr.co._29cm.homework.product.entity.Product;
-import kr.co._29cm.homework.product.repository.ProductRepository;
 import kr.co._29cm.homework.product.service.ProductService;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class OrderServiceTest {
@@ -29,6 +28,7 @@ class OrderServiceTest {
 
 
     @Test
+    @DisplayName("Multi thread 환경 하에서 동시성 테스트")
     void concurrency_test() {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         Product product = productService.getProductById(778422L).get();

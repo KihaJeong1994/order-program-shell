@@ -13,6 +13,8 @@ import lombok.ToString;
 public class Order {
 
     private Long id;
+
+    // @ManyToMany : JPA 다대다를 고려해 Long productId 대신 Product product 사용
     private Product product;
     private Integer quantity;
 
