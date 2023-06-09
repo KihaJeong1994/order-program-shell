@@ -25,18 +25,20 @@ public class OrderService {
 
     @Transactional
     public Boolean makeOrders(List<Order> orders) throws SoldOutException {
-//        for(Order order : orders) makeOrder(order);
-//        return true;
-        return transactionTemplate.execute(status -> {
-            try {
-                for(Order order : orders) makeOrder(order);
-                return true;
-            } catch (SoldOutException e) {
-                throw e;
-//                status.setRollbackOnly();
-//                return false;
-            }
-        });
+        for(Order order : orders){
+            makeOrder(order);
+        }
+        return true;
+//        return transactionTemplate.execute(status -> {
+//            try {
+//                for(Order order : orders) makeOrder(order);
+//                return true;
+//            } catch (SoldOutException e) {
+//                throw e;
+////                status.setRollbackOnly();
+////                return false;
+//            }
+//        });
     }
 
     @Transactional

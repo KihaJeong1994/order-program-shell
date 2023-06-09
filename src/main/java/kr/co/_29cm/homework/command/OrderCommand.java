@@ -33,7 +33,7 @@ public class OrderCommand extends AbstractShellComponent {
     private final Integer DELIVERY_FEE = 2_500;
 
     @ShellMethod(key = {"o","order"}, value = "String input", group = "Components")
-    @Transactional
+//    @Transactional
     public void order() throws SoldOutException {
         boolean isFinished = false;
         List<Order> orders = new ArrayList<>();

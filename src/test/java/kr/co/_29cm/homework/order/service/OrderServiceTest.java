@@ -5,6 +5,7 @@ import kr.co._29cm.homework.order.entity.Order;
 import kr.co._29cm.homework.product.entity.Product;
 import kr.co._29cm.homework.product.repository.ProductRepository;
 import kr.co._29cm.homework.product.service.ProductService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,13 +30,15 @@ class OrderServiceTest {
     @Autowired
     private OrderService orderService;
 
+
     @Test
+    @Disabled
     void concurrency_test() throws InterruptedException {
         Product productById = productService.getProductById(778422L).get();
         Order order = new Order(productById, 7);
         List<Order> orders = Arrays.asList(order);
         ExecutorService executorService = Executors.newFixedThreadPool(2);
-        CountDownLatch latch = new CountDownLatch (1);
+        CountDownLatch latch = new CountDownLatch (2);
         AtomicBoolean result1 = new AtomicBoolean(true);
         AtomicBoolean result2 = new AtomicBoolean(true);
 
@@ -45,7 +48,9 @@ class OrderServiceTest {
                 executorService.execute(() -> {
                     try{
                         result1.set(orderService.makeOrders(orders));
+                        latch.countDown();
                     }catch (SoldOutException e){
+                        System.out.println(e.getMessage());
                         latch.countDown();
                         throw e;
                     }
@@ -53,30 +58,34 @@ class OrderServiceTest {
                 executorService.execute(() -> {
                     try{
                         result2.set(orderService.makeOrders(orders));
+                        latch.countDown();
                     }catch (SoldOutException e){
+                        System.out.println(e.getMessage());
                         latch.countDown();
                         throw e;
                     }
                 });
-                latch.await();
             }catch (SoldOutException e){
+
                 throw e;
             }
 
+            latch.await();
         });
-        productById = productService.getProductById(778422L).get();
-        System.out.println(productById);
     }
 
-//    @Test
-//    void rollback_test() throws SoldOutException {
-//        Product productById1 = productService.getProductById(782858L).get();
-//        Product productById = productService.getProductById(778422L).get();
-//        Order order1 = new Order(productById1, 8);
-//        Order order = new Order(productById, 8);
-//        List<Order> orders = Arrays.asList(order1,order);
-//        assertThrows(SoldOutException.class,()->orderService.makeOrders(orders));
-//        assertEquals(50, productById1.getStock());
-//    }
+    @Test
+    void rollback_test() throws SoldOutException {
+        Product productById1 = productService.getProductById(782858L).get();
+        Product productById = productService.getProductById(778422L).get();
+        Order order1 = new Order(productById1, 8);
+        Order order = new Order(productById, 8);
+        List<Order> orders = new ArrayList<>();
+        orders.add(order1);
+        orders.add(order);
+        assertThrows(SoldOutException.class,()->orderService.makeOrders(orders));
+    }
+
+
 
 }

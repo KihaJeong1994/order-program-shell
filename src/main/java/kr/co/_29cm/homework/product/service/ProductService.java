@@ -28,7 +28,7 @@ public class ProductService {
 
     @Transactional
     public void decreaseStock(Long id, int quantity) throws SoldOutException {
-        Product product = productRepository.findById(id).get();
+        Product product = productRepository.findByIdForUpdate(id);
         if(quantity> product.getStock()){
             throw new SoldOutException();
         }else {
