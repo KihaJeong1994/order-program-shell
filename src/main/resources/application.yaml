@@ -1,4 +1,8 @@
 logging:
   level:
     root: error
+spring:
+  shell:
+    history:
+      enabled: false
 
