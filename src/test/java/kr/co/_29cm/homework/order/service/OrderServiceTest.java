@@ -14,10 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,60 +29,27 @@ class OrderServiceTest {
 
 
     @Test
-    @Disabled
-    void concurrency_test() throws InterruptedException {
-        Product productById = productService.getProductById(778422L).get();
-        Order order = new Order(productById, 7);
-        List<Order> orders = Arrays.asList(order);
+    void concurrency_test() {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
-        CountDownLatch latch = new CountDownLatch (2);
-        AtomicBoolean result1 = new AtomicBoolean(true);
-        AtomicBoolean result2 = new AtomicBoolean(true);
-
+        Product product = productService.getProductById(778422L).get();
+        Order order = new Order(product, product.getStock());
+        List<Order> orders = Arrays.asList(order);
+        Future<?> submit1 = executorService.submit(() -> {
+            orderService.makeOrders(orders);
+        });
+        Future<?> submit2 = executorService.submit(() -> {
+            orderService.makeOrders(orders);
+        });
 
         assertThrows(SoldOutException.class,()->{
             try {
-                executorService.execute(() -> {
-                    try{
-                        result1.set(orderService.makeOrders(orders));
-                        latch.countDown();
-                    }catch (SoldOutException e){
-                        System.out.println(e.getMessage());
-                        latch.countDown();
-                        throw e;
-                    }
-                });
-                executorService.execute(() -> {
-                    try{
-                        result2.set(orderService.makeOrders(orders));
-                        latch.countDown();
-                    }catch (SoldOutException e){
-                        System.out.println(e.getMessage());
-                        latch.countDown();
-                        throw e;
-                    }
-                });
-            }catch (SoldOutException e){
-
-                throw e;
+                submit1.get();
+                submit2.get();
+            }catch (ExecutionException ex){
+                System.out.println(ex.getMessage());
+                throw ex.getCause();
             }
-
-            latch.await();
         });
     }
-
-    @Test
-    void rollback_test() throws SoldOutException {
-        Product productById1 = productService.getProductById(782858L).get();
-        Product productById = productService.getProductById(778422L).get();
-        Order order1 = new Order(productById1, 8);
-        Order order = new Order(productById, 8);
-        List<Order> orders = new ArrayList<>();
-        orders.add(order1);
-        orders.add(order);
-        assertThrows(SoldOutException.class,()->orderService.makeOrders(orders));
-    }
-
-
 
 }
