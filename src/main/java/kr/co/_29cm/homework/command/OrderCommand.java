@@ -28,12 +28,8 @@ public class OrderCommand extends AbstractShellComponent {
 
     private final ProductService productService;
     private final OrderService orderService;
-    private final String CROSS_LINE = "-----------------------------";
-    private final Integer MINIMUM_ORDER_WITHOUT_DELIVERY_FEE = 50_000;
-    private final Integer DELIVERY_FEE = 2_500;
 
     @ShellMethod(key = {"o","order"}, value = "String input", group = "Components")
-//    @Transactional
     public void order() throws SoldOutException {
         boolean isFinished = false;
         List<Order> orders = new ArrayList<>();
@@ -44,7 +40,7 @@ public class OrderCommand extends AbstractShellComponent {
                 if(product==null && quantity==null){
                     isFinished = true;
                     orderService.makeOrders(orders);
-                    printOrders(orders);
+                    orderService.printOrders(orders);
                 }else{
                     Order order = new Order(product, quantity);
                     orders.add(order);
@@ -58,6 +54,14 @@ public class OrderCommand extends AbstractShellComponent {
         return CommandHandlingResult.of(e.getMessage()+'\n', 1);
     }
 
+
+    private String getInput(String s) {
+        StringInput component = new StringInput(getTerminal(), s, null, new StringInputCustomRenderer());
+        component.setResourceLoader(getResourceLoader());
+        component.setTemplateExecutor(getTemplateExecutor());
+        StringInputContext context = component.run(StringInputContext.empty());
+        return context.getResultValue();
+    }
 
     private Product enterProduct() {
         while (true){
@@ -96,37 +100,7 @@ public class OrderCommand extends AbstractShellComponent {
         }
     }
 
-    private String getInput(String s) {
-        StringInput component = new StringInput(getTerminal(), s, null, new StringInputCustomRenderer());
-        component.setResourceLoader(getResourceLoader());
-        component.setTemplateExecutor(getTemplateExecutor());
-        StringInputContext context = component.run(StringInputContext.empty());
-        return context.getResultValue();
-    }
 
-    private void printOrders(List<Order> orders) throws SoldOutException {
-        if(orders.isEmpty()){
-            return;
-        }
-        int orderSum = orders.stream().mapToInt(o->o.getProduct().getPrice()*o.getQuantity()).sum();
-        int total = orderSum;
-        if(orderSum<MINIMUM_ORDER_WITHOUT_DELIVERY_FEE){
-            total+=DELIVERY_FEE;
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("주문내역: ").append('\n');
-        sb.append(CROSS_LINE).append('\n');
-        for(Order order : orders){
-            sb.append(order.getProduct().getName()).append(" - ").append(order.getQuantity()).append("개").append('\n');
-        }
-        sb.append(CROSS_LINE).append('\n');
-        sb.append("주문금액: ").append(orderSum).append("원").append('\n');
-        if(orderSum<MINIMUM_ORDER_WITHOUT_DELIVERY_FEE){
-            sb.append("배송비: ").append(DELIVERY_FEE).append("원").append('\n');
-        }
-        sb.append(CROSS_LINE).append('\n');
-        sb.append("지불금액: ").append(total).append("원").append('\n');
-        sb.append(CROSS_LINE);
-        System.out.println(sb.toString());
-    }
+
+
 }

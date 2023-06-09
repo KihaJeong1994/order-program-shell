@@ -21,30 +21,45 @@ import java.util.Scanner;
 public class OrderService {
 
     private final ProductService productService;
-    private final TransactionTemplate transactionTemplate;
+    private final String CROSS_LINE = "-----------------------------";
+    private final Integer MINIMUM_ORDER_WITHOUT_DELIVERY_FEE = 50_000;
+    private final Integer DELIVERY_FEE = 2_500;
 
     @Transactional
-    public Boolean makeOrders(List<Order> orders) throws SoldOutException {
+    public void makeOrders(List<Order> orders) throws SoldOutException {
         for(Order order : orders){
             makeOrder(order);
         }
-        return true;
-//        return transactionTemplate.execute(status -> {
-//            try {
-//                for(Order order : orders) makeOrder(order);
-//                return true;
-//            } catch (SoldOutException e) {
-//                throw e;
-////                status.setRollbackOnly();
-////                return false;
-//            }
-//        });
     }
 
     @Transactional
     public void makeOrder(Order order) throws SoldOutException {
         productService.decreaseStock(order.getProduct().getId(), order.getQuantity());
         // Order 저장 등
+    }
+
+    public void printOrders(List<Order> orders) throws SoldOutException {
+        if(orders.isEmpty()){
+            return;
+        }
+        int orderSum = orders.stream().mapToInt(o->o.getProduct().getPrice()*o.getQuantity()).sum();
+        int total = orderSum;
+        if(orderSum<MINIMUM_ORDER_WITHOUT_DELIVERY_FEE){
+            total+=DELIVERY_FEE;
+        }
+        System.out.println("주문내역: ");
+        System.out.println(CROSS_LINE);
+        for(Order order : orders){
+            System.out.println(order.getProduct().getName()+" - "+order.getQuantity()+"개");
+        }
+        System.out.println(CROSS_LINE);
+        System.out.println("주문금액: "+orderSum+"원");
+        if(orderSum<MINIMUM_ORDER_WITHOUT_DELIVERY_FEE){
+            System.out.println("배송비: "+DELIVERY_FEE+"원");
+        }
+        System.out.println(CROSS_LINE);
+        System.out.println("지불금액: "+total+"원");
+        System.out.println(CROSS_LINE);
     }
 
 

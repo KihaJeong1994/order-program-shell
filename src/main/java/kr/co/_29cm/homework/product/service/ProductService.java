@@ -40,11 +40,11 @@ public class ProductService {
     public void printProductList() {
         System.out.println("상품번호"+WHITE_SPACE+"상품명"+LONGER_WHITE_SPACE+"판매가격"+WHITE_SPACE+"재고수");
         getProducts().forEach(
-                product -> {
-                    System.out.println(
-                            product.getId()+WHITE_SPACE+product.getName()+WHITE_SPACE+product.getPrice()+WHITE_SPACE+product.getStock()
-                    );
-                }
+            product -> {
+                System.out.println(
+                        product.getId()+WHITE_SPACE+product.getName()+WHITE_SPACE+product.getPrice()+WHITE_SPACE+product.getStock()
+                );
+            }
         );
     }
 }
