@@ -36,9 +36,11 @@ class OrderServiceTest {
         List<Order> orders = Arrays.asList(order);
         Future<?> submit1 = executorService.submit(() -> {
             orderService.makeOrders(orders);
+            System.out.println("주문 성공1");
         });
         Future<?> submit2 = executorService.submit(() -> {
             orderService.makeOrders(orders);
+            System.out.println("주문 성공2");
         });
 
         assertThrows(SoldOutException.class,()->{

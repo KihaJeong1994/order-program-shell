@@ -5,4 +5,6 @@ spring:
   shell:
     history:
       enabled: false
+  main:
+    banner-mode: "off"
 
