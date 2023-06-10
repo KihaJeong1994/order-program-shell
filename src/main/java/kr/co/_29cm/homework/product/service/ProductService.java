@@ -18,12 +18,18 @@ public class ProductService {
     private final String LONGER_WHITE_SPACE = "                          ";
 
     private final ProductRepository productRepository;
+
     public List<Product> getProducts(){
-        return productRepository.findAll();
+        return productRepository.findAllByOrderByIdDesc();
     }
 
     public Optional<Product> getProductById(Long id){
         return productRepository.findById(id);
+    }
+
+    @Transactional
+    public void saveProducts(List<Product> products){
+        productRepository.saveAll(products);
     }
 
     @Transactional
@@ -38,7 +44,7 @@ public class ProductService {
     }
 
     public void printProductList() {
-        System.out.println("상품번호"+WHITE_SPACE+"상품명"+LONGER_WHITE_SPACE+"판매가격"+WHITE_SPACE+"재고수");
+        System.out.println("상품번호"+"   "+"상품명"+LONGER_WHITE_SPACE+"판매가격"+WHITE_SPACE+"재고수");
         getProducts().forEach(
             product -> {
                 System.out.println(
@@ -46,5 +52,6 @@ public class ProductService {
                 );
             }
         );
+        System.out.println("");
     }
 }

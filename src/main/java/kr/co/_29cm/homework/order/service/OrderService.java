@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.StringUtils;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -42,23 +43,27 @@ public class OrderService {
         if(orders.isEmpty()){
             return;
         }
-        int orderSum = orders.stream().mapToInt(o->o.getProduct().getPrice()*o.getQuantity()).sum();
+
+        int orderSum = 0;
+        System.out.println("주문 내역: ");
+        System.out.println(CROSS_LINE);
+        for(Order order : orders){
+            System.out.println(order.getProduct().getName()+" - "+order.getQuantity()+"개");
+            orderSum += order.getProduct().getPrice()*order.getQuantity();
+        }
+        System.out.println(CROSS_LINE);
+
         int total = orderSum;
         if(orderSum<MINIMUM_ORDER_WITHOUT_DELIVERY_FEE){
             total+=DELIVERY_FEE;
         }
-        System.out.println("주문내역: ");
-        System.out.println(CROSS_LINE);
-        for(Order order : orders){
-            System.out.println(order.getProduct().getName()+" - "+order.getQuantity()+"개");
-        }
-        System.out.println(CROSS_LINE);
-        System.out.println("주문금액: "+orderSum+"원");
+        System.out.println("주문금액: "+ NumberFormat.getIntegerInstance().format(orderSum)+"원");
         if(orderSum<MINIMUM_ORDER_WITHOUT_DELIVERY_FEE){
-            System.out.println("배송비: "+DELIVERY_FEE+"원");
+            System.out.println("배송비: "+NumberFormat.getIntegerInstance().format(DELIVERY_FEE)+"원");
         }
         System.out.println(CROSS_LINE);
-        System.out.println("지불금액: "+total+"원");
+
+        System.out.println("지불금액: "+NumberFormat.getIntegerInstance().format(total)+"원");
         System.out.println(CROSS_LINE);
     }
 

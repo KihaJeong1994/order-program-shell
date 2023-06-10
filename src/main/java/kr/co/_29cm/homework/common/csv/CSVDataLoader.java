@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import kr.co._29cm.homework.product.entity.Product;
-import kr.co._29cm.homework.product.repository.ProductRepository;
+import kr.co._29cm.homework.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -23,15 +23,15 @@ import java.util.List;
 public class CSVDataLoader implements InitializingBean {
 
     private String CSV_PATH = "./data/data.csv";
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        List<Product> products = loadObjectList();
-        productRepository.saveAll(products);
+        List<Product> products = loadProducts();
+        productService.saveProducts(products);
     }
 
-    public List<Product> loadObjectList() throws IOException {
+    private List<Product> loadProducts() throws IOException {
         try {
             CsvSchema bootstrapSchema = CsvSchema.builder()
                     .addColumn("상품번호")
@@ -49,7 +49,7 @@ public class CSVDataLoader implements InitializingBean {
                 IOUtils.closeQuietly(inputStream);
             }
             MappingIterator<Product> readValues =
-                    mapper.reader(Product.class).with(bootstrapSchema).readValues(file);
+                    mapper.readerFor(Product.class).with(bootstrapSchema).readValues(file);
             return readValues.readAll();
         } catch (Exception e) {
             e.printStackTrace();

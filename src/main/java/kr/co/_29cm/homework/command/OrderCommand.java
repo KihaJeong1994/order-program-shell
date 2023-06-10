@@ -16,7 +16,6 @@ import org.springframework.shell.component.StringInput.StringInputContext;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -36,15 +35,21 @@ public class OrderCommand extends AbstractShellComponent {
         productService.printProductList();
         while (!isFinished){
                 Product product = enterProduct();
-                Integer quantity = enterQuantity();
-                if(product==null && quantity==null){
+                if(product==null){
                     isFinished = true;
                     orderService.makeOrders(orders);
                     orderService.printOrders(orders);
-                }else{
-                    Order order = new Order(product, quantity);
-                    orders.add(order);
+                    continue;
                 }
+                Integer quantity = enterQuantity();
+                if(quantity==null){
+                    isFinished = true;
+                    orderService.makeOrders(orders);
+                    orderService.printOrders(orders);
+                    continue;
+                }
+                Order order = new Order(product, quantity);
+                orders.add(order);
         }
     }
 
@@ -71,9 +76,9 @@ public class OrderCommand extends AbstractShellComponent {
                     Long productId = Long.parseLong(productIdStr);
                     return productService.getProductById(productId).orElseThrow(()->new NoSuchProductException(productId));
                 }catch (NumberFormatException ex){
-                    System.out.println("NumberFormatException 발생. 숫자를 입력해주세요");
+                    System.out.println("NumberFormatException 발생. 숫자를 입력해주세요.");
                 } catch (NoSuchProductException e) {
-                    System.out.println("NoSuchProductException 발생. "+productIdStr+" 상품번호를 가진 상품이 없습니다");
+                    System.out.println("NoSuchProductException 발생. "+productIdStr+" 상품번호를 가진 상품이 없습니다.");
                 }
             }else {
                 return null;
@@ -90,9 +95,13 @@ public class OrderCommand extends AbstractShellComponent {
             if(StringUtils.hasText(quantityStr)){
                 try{
                     quantity = Integer.parseInt(quantityStr);
-                    return quantity;
+                    if(quantity>0){
+                        return quantity;
+                    }else {
+                        System.out.println("수량은 0보다 큰 값을 입력하여주세요.");
+                    }
                 }catch (NumberFormatException ex){
-                    System.out.println("NumberFormatException 발생. 숫자를 입력해주세요");
+                    System.out.println("NumberFormatException 발생. 숫자를 입력해주세요.");
                 }
             }else{
                 return quantity;
