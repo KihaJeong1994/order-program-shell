@@ -1,6 +1,6 @@
-package kr.co._29cm.homework.order.entity;
+package kr.co._29cm.homework.domain.order.entity;
 
-import kr.co._29cm.homework.product.entity.Product;
+import kr.co._29cm.homework.domain.product.entity.Product;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

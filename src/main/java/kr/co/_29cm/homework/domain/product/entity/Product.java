@@ -1,4 +1,4 @@
-package kr.co._29cm.homework.product.entity;
+package kr.co._29cm.homework.domain.product.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;

@@ -1,8 +1,8 @@
-package kr.co._29cm.homework.product.repository;
+package kr.co._29cm.homework.domain.product.repository;
 
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.QueryHint;
-import kr.co._29cm.homework.product.entity.Product;
+import kr.co._29cm.homework.domain.product.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;

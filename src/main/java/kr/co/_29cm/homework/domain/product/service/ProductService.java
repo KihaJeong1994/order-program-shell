@@ -1,8 +1,8 @@
-package kr.co._29cm.homework.product.service;
+package kr.co._29cm.homework.domain.product.service;
 
 import kr.co._29cm.homework.common.exception.SoldOutException;
-import kr.co._29cm.homework.product.entity.Product;
-import kr.co._29cm.homework.product.repository.ProductRepository;
+import kr.co._29cm.homework.domain.product.entity.Product;
+import kr.co._29cm.homework.domain.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

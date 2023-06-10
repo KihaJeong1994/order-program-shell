@@ -1,21 +1,14 @@
-package kr.co._29cm.homework.order.service;
+package kr.co._29cm.homework.domain.order.service;
 
-import kr.co._29cm.homework.common.exception.CustomException;
-import kr.co._29cm.homework.common.exception.NoSuchProductException;
 import kr.co._29cm.homework.common.exception.SoldOutException;
-import kr.co._29cm.homework.order.entity.Order;
-import kr.co._29cm.homework.product.entity.Product;
-import kr.co._29cm.homework.product.service.ProductService;
+import kr.co._29cm.homework.domain.order.entity.Order;
+import kr.co._29cm.homework.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.util.StringUtils;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 @Service
 @RequiredArgsConstructor

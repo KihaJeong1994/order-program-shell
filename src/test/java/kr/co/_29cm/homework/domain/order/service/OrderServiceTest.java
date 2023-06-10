@@ -1,9 +1,9 @@
-package kr.co._29cm.homework.order.service;
+package kr.co._29cm.homework.domain.order.service;
 
 import kr.co._29cm.homework.common.exception.SoldOutException;
-import kr.co._29cm.homework.order.entity.Order;
-import kr.co._29cm.homework.product.entity.Product;
-import kr.co._29cm.homework.product.service.ProductService;
+import kr.co._29cm.homework.domain.order.entity.Order;
+import kr.co._29cm.homework.domain.product.entity.Product;
+import kr.co._29cm.homework.domain.product.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
