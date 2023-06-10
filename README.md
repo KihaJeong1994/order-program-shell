@@ -66,6 +66,7 @@ java -jar ./build/libs/homework-0.0.1-SNAPSHOT.jar
 ```
 multi thread 요청으로 SoldOutException이 작동하는 지 테스트하는 코드가 있습니다.
 
+---
 ## 프로젝트 구현 방향
 
 ### 비즈니스 로직과 기타 기능의 분리
@@ -80,7 +81,6 @@ multi thread 요청으로 SoldOutException이 작동하는 지 테스트하는 �
 - csv의 데이터를 초기 데이터로 활용해 기동 시 in memory db에 저장하였습니다.
 - `spring-shell-starter` 라이브러리를 사용하여 주문, 종료 명령어 작동을 위한 로직을 분리하였습니다.
 - command 패키지는 일반 MVC 패턴의 controller 처럼, service를 주입받아 주로 service의 메소드를 호출하고 결과를 출력하는 것에 집중하였습니다.
-
 
 ### 트랜잭션 처리와 동시성 이슈 관리
 
